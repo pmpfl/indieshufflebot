@@ -1,1 +1,2 @@
 -e git://github.com/fopina/tgbotplug.git#egg=tgbotplug
+lxml==3.4.3
