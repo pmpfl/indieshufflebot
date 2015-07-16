@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import tgbot
-import config
+import os
 from requests.packages import urllib3
 from bot.indieshuffle import IndieShuPlugin
 
@@ -11,7 +11,7 @@ urllib3.disable_warnings()
 
 def main():
     tg = tgbot.TGBot(
-        config.telegramkey,
+        os.environ['TELEGRAM_KEY'],
         plugins=[
             IndieShuPlugin(),
         ]
