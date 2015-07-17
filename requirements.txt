@@ -1,2 +1,2 @@
--e git://github.com/fopina/tgbotplug.git#egg=tgbotplug
+-e git://github.com/pmpfl/tgbotplug.git@mymaster#egg=tgbotplug
 lxml==3.4.3

@@ -4,10 +4,26 @@ from twx.botapi import ReplyKeyboardMarkup
 from lxml import html
 
 
+def _url(append):
+    return 'http://www.indieshuffle.com%s' % (append.replace(" ", "-"))
+
+
+def _send_songs(url, bot, message):
+    r = requests.get(url)
+    tree = html.fromstring(r.text)
+    songs = tree.xpath('//div[@class="songMidContent"]//following::td/div/a/@href')
+    for song in songs:
+        bot.tg.send_message(
+            message.chat.id,
+            _url(song),
+            reply_to_message_id=message.message_id)
+
+
 class IndieShuPlugin(tgbot.TGPluginBase):
     def __init__(self):
         super(IndieShuPlugin, self).__init__()
-        self._url = 'http://www.indieshuffle.com'
+        self._time_keyboard = [['Week'], ['Month']]
+        self._genre_keyboard = [['All'], ['Electronic'], ['Indie rock'], ['House'], ['Remixes'], ['Female Vocalist'], ['Ambient'], ['Folk']]
 
     def list_commands(self):
         return [
@@ -19,21 +35,38 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         ]
 
     def tsong(self, bot, message, text):
-        r = requests.get(self._url + '/song-of-the-day')
+        r = requests.get(_url('/song-of-the-day'))
         tree = html.fromstring(r.text)
-        song = tree.xpath('//a[starts-with(text(),"SONG OF THE DAY")]//following::div[@class="right_icons"]/a/@href')
+        song = tree.xpath('//a[starts-with(text(),"SONG OF THE DAY")]//following::td/div/a/@href')
         if not song:
             reply = 'not found :('
         else:
-            reply = song[0]
-        bot.tg.send_message(message.chat.id, reply , reply_to_message_id=message.message_id)
+            reply = _url(song[0])
+        bot.tg.send_message(
+            message.chat.id,
+            reply,
+            reply_to_message_id=message.message_id)
 
     def latest(self, bot, message, text):
-        r = requests.get(self._url)
-        tree = html.fromstring(r.text)
-        songs = tree.xpath('//div[@class="songMidContent"]//following::a[contains(@href, "soundcloud")]/@href')
-        for song in songs:
-            bot.tg.send_message(message.chat.id, song)
+        reply_markup = ReplyKeyboardMarkup.create(
+            keyboard=self._genre_keyboard,
+            resize_keyboard=True,
+            one_time_keyboard=True,
+            selective=True)
+        rep = bot.tg.send_message(
+            message.chat.id,
+            'Please select the genre: ',
+            reply_to_message_id=message.message_id,
+            reply_markup=reply_markup
+        ).wait()
+        self.need_reply(
+            self.latest_try, message, out_message=rep, selective=True)
+
+    def latest_try(self, bot, message, text):
+        url = _url('')
+        if text != '' and text != 'All':
+            url = _url('/songs/' + text)
+        _send_songs(url, bot, message)
 
     def popular(self, bot, message, text):
         reply_markup = ReplyKeyboardMarkup.create(
@@ -57,18 +90,49 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if text == 'Month':
             self.popularthismonth(bot, message, text)
             return
-        bot.tg.send_message(message.chat.id, ':(')
+        bot.tg.send_message(
+            message.chat.id,
+            ':(',
+            reply_to_message_id=message.message_id)
 
     def popularthisweek(self, bot, message, text):
-        r = requests.get(self._url + '/popular/week/')
-        tree = html.fromstring(r.text)
-        songs = tree.xpath('//div[@class="right_icons"]//following::a[contains(@href, "soundcloud")]/@href')
-        for song in songs:
-            bot.tg.send_message(message.chat.id, song)
+        reply_markup = ReplyKeyboardMarkup.create(
+            keyboard=self._genre_keyboard,
+            resize_keyboard=True,
+            one_time_keyboard=True,
+            selective=True)
+        rep = bot.tg.send_message(
+            message.chat.id,
+            'Please select the genre: ',
+            reply_to_message_id=message.message_id,
+            reply_markup=reply_markup
+        ).wait()
+        self.need_reply(
+            self.popularthisweek_try, message, out_message=rep, selective=True)
+
+    def popularthisweek_try(self, bot, message, text):
+        url = _url('/popular/week/')
+        if text != '' and text != 'All':
+            url = _url('/popular/week/' + text)
+        _send_songs(url, bot, message)
 
     def popularthismonth(self, bot, message, text):
-        r = requests.get(self._url + '/popular/month/')
-        tree = html.fromstring(r.text)
-        songs = tree.xpath('//div[@class="right_icons"]//following::a[contains(@href, "soundcloud")]/@href')
-        for song in songs:
-            bot.tg.send_message(message.chat.id, song)
+        reply_markup = ReplyKeyboardMarkup.create(
+            keyboard=self._genre_keyboard,
+            resize_keyboard=True,
+            one_time_keyboard=True,
+            selective=True)
+        rep = bot.tg.send_message(
+            message.chat.id,
+            'Please select the genre: ',
+            reply_to_message_id=message.message_id,
+            reply_markup=reply_markup
+        ).wait()
+        self.need_reply(
+            self.popularthismonth_try, message, out_message=rep, selective=True)
+
+    def popularthismonth_try(self, bot, message, text):
+        url = _url('/popular/month/')
+        if text != '' and text != 'All':
+            url = _url('/popular/month/' + text)
+        _send_songs(url, bot, message)
