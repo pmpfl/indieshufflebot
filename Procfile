@@ -1,0 +1,1 @@
+worker: ./indieshufflebot.py
