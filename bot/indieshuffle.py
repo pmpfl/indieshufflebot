@@ -21,7 +21,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
     def tsong(self, bot, message, text):
         r = requests.get(self._url + '/song-of-the-day')
         tree = html.fromstring(r.text)
-        song = tree.xpath('//a[starts-with(text(),"SONG OF THE DAY")]//before::/div[@class="right_icons"]/a/@href')
+        song = tree.xpath('//a[starts-with(text(),"SONG OF THE DAY")]//following::div[@class="right_icons"]/a/@href')
         if not song:
             reply = 'not found :('
         else:
