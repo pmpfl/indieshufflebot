@@ -4,7 +4,7 @@ A telegram bot based on [tgbotplug].
 
 Find it here : [indieshufflebot]
 
-### Funcionalities
+### Functionalities
 
 - Get latest songs from [indieshuffle]. 
 - Get popular songs from [indieshuffle].
