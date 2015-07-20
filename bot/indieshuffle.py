@@ -51,7 +51,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         songs = _get_songs('', count=10)
         found = False
         for song in songs:
-            if (text == 'All'):
+            if (text == 'all'):
                 found = True
                 bot.tg.send_message(
                     message.chat.id,
