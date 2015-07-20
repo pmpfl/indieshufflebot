@@ -49,21 +49,28 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def latest_try(self, bot, message, text):
         songs = _get_songs('', count=10)
+        found = False
         for song in songs:
             if (text == 'All'):
+                found = True
                 bot.tg.send_message(
                     message.chat.id,
                     song['url'],
                     reply_to_message_id=message.message_id)
                 continue
             for tag in song['tags']:
-                print tag['slug']
                 if text.lower() in tag['slug'].lower():
+                    found = True
                     bot.tg.send_message(
                         message.chat.id,
                         song['url'],
                         reply_to_message_id=message.message_id)
                     break
+        if not found:
+            bot.tg.send_message(
+                message.chat.id,
+                'not found :(',
+                reply_to_message_id=message.message_id)
 
     def popular(self, bot, message, text):
         reply_markup = ReplyKeyboardMarkup.create(
@@ -82,18 +89,25 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def popular_try(self, bot, message, text):
         songs = _get_songs('track/popular/', count=10)
+        found = False
         for song in songs:
-            if (text == 'All'):
+            if (text == 'all'):
+                found = True
                 bot.tg.send_message(
                     message.chat.id,
                     song['url'],
                     reply_to_message_id=message.message_id)
                 continue
             for tag in song['tags']:
-                print tag['slug']
                 if text.lower() in tag['slug'].lower():
+                    found = True
                     bot.tg.send_message(
                         message.chat.id,
                         song['url'],
                         reply_to_message_id=message.message_id)
                     break
+        if not found:
+            bot.tg.send_message(
+                message.chat.id,
+                'not found :(',
+                reply_to_message_id=message.message_id)
