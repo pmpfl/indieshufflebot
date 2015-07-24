@@ -1,5 +1,7 @@
 # IndieShuffleBot
 
+[![Build Status](https://travis-ci.org/pmpfl/indieshufflebot.svg?branch=master)](https://travis-ci.org/pmpfl/indieshufflebot)
+
 A telegram bot based on [tgbotplug].
 
 Find it here : [indieshufflebot]
