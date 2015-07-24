@@ -14,6 +14,8 @@ def _get_songs(service, count=1, page=1):
 class IndieShuPlugin(tgbot.TGPluginBase):
     def __init__(self):
         super(IndieShuPlugin, self).__init__()
+        self._emoji_music = u'\U0001F3B5'
+        self._emoji_save = u'\U0001F3B4'
         self._genre_keyboard = [['all'], ['electronic'], ['surf-rock'], ['indie-pop'], ['rac'], ['remale-vocalist'], ['covers']]
 
     def list_commands(self):
@@ -24,38 +26,25 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         ]
 
     def tsong(self, bot, message, text):
-        reply = json.loads(_get_songs('songsoftheday'))['posts'][0]['url']
-        bot.tg.send_message(
-            message.chat.id,
-            reply,
-            reply_to_message_id=message.message_id)
+        song = json.loads(_get_songs('songsoftheday'))['posts'][0]
+        msg = '\n ' + self._emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist'] + '\n \n' + song['url']
+        bot.tg.send_message(message.chat.id, msg)
 
     def latest(self, bot, message, text):
         if text:
-            songs = json.loads(_get_songs('', count=1))['posts']
-            found = False
+            songs = json.loads(_get_songs('', count=5))['posts']
+            msg = ''
             for song in songs:
                 if (text == 'all'):
-                    found = True
-                    bot.tg.send_message(
-                        message.chat.id,
-                        song['url'],
-                        reply_to_message_id=message.message_id)
+                    msg += '\n ' + self._emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist'] + '\n'
+                    #msg += '\n ' + self._emoji_save + ' - /song ' + str(song['id']) + '\n'
+                    msg += song['url'] + '\n'
                     continue
                 for tag in song['tags']:
                     if text.lower() in tag['slug'].lower():
-                        found = True
-                        bot.tg.send_message(
-                            message.chat.id,
-                            song['url'],
-                            reply_to_message_id=message.message_id)
+                        msg += '\n ' + self._emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist'] + '\n'
                         break
-            if not found:
-                bot.tg.send_message(
-                    message.chat.id,
-                    'not found :(',
-                    reply_to_message_id=message.message_id)
-
+            bot.tg.send_message(message.chat.id, msg, disable_web_page_preview=True)
         else:
             reply_markup = ReplyKeyboardMarkup.create(
                 keyboard=self._genre_keyboard,
@@ -67,34 +56,23 @@ class IndieShuPlugin(tgbot.TGPluginBase):
                 reply_to_message_id=message.message_id,
                 reply_markup=reply_markup
             ).wait()
-            self.need_reply(
-                self.latest, message, out_message=rep, selective=True)
+            self.need_reply(self.latest, message, out_message=rep, selective=True)
 
     def popular(self, bot, message, text):
         if text:
-            songs = json.loads(_get_songs('track/popular/', count=10))['posts']
-            found = False
+            songs = json.loads(_get_songs('track/popular/', count=5))['posts']
+            msg = ''
             for song in songs:
                 if (text == 'all'):
-                    found = True
-                    bot.tg.send_message(
-                        message.chat.id,
-                        song['url'],
-                        reply_to_message_id=message.message_id)
+                    msg += '\n ' + self._emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist'] + '\n'
+                    msg += song['url'] + '\n'
                     continue
                 for tag in song['tags']:
                     if text.lower() in tag['slug'].lower():
-                        found = True
-                        bot.tg.send_message(
-                            message.chat.id,
-                            song['url'],
-                            reply_to_message_id=message.message_id)
+                        msg += '\n ' + self._emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist'] + '\n'
+                        msg += song['url'] + '\n'
                         break
-            if not found:
-                bot.tg.send_message(
-                    message.chat.id,
-                    'not found :(',
-                    reply_to_message_id=message.message_id)
+            bot.tg.send_message(message.chat.id, msg, disable_web_page_preview=True)
         else:
             reply_markup = ReplyKeyboardMarkup.create(
                 keyboard=self._genre_keyboard,

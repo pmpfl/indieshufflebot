@@ -6,12 +6,14 @@ import json
 
 
 def _request_mock(url, request):
-    return json.dumps({'posts': [{'url': 'http://www.indieshuffle.com/', "tags": [{"slug": "covers"}]}]})
+    return json.dumps({'posts': [{'url': 'http://www.indieshuffle.com/', 'sub_title': 'test', 'artist': 'test', "tags": [{"slug": "covers"}]}]})
 
 
 class IndieShuffle_Test(plugintest.PluginTestCase):
 
     def setUp(self):
+        self._emoji_music = u'\U0001F3B5'
+        self._emoji_save = u'\U0001F3B4'
         self.bot = self.fake_bot('', plugins=[IndieShuPlugin()])
 
     def test_tsong(self):
@@ -28,7 +30,7 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
                     }
                 })
             )
-        self.assertReplied(self.bot, 'http://www.indieshuffle.com/')
+        self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\n \nhttp://www.indieshuffle.com/'))
 
     def test_latest(self):
         self.bot.process_update(
@@ -57,7 +59,7 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
                     }
                 })
             )
-        self.assertReplied(self.bot, 'http://www.indieshuffle.com/')
+        self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\nhttp://www.indieshuffle.com/\n'))
 
     def test_popular(self):
         self.bot.process_update(
@@ -86,4 +88,4 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
                     }
                 })
             )
-        self.assertReplied(self.bot, 'http://www.indieshuffle.com/')
+            self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\nhttp://www.indieshuffle.com/\n'))
