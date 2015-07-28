@@ -6,7 +6,7 @@ import json
 
 
 def _request_mock(url, request):
-    return json.dumps({'posts': [{'url': 'http://www.indieshuffle.com/', 'sub_title': 'test', 'artist': 'test', "tags": [{"slug": "covers"}]}]})
+    return json.dumps({'posts': [{'url': 'http://www.indieshuffle.com/', 'id': '1','sub_title': 'test', 'artist': 'test', "tags": [{"slug": "covers"}], "songs": [{"url": "http://www.indieshuffle.com/", "title": "test"}]}]})
 
 
 class IndieShuffle_Test(plugintest.PluginTestCase):
@@ -30,62 +30,45 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
                     }
                 })
             )
-        self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\n \nhttp://www.indieshuffle.com/'))
+        msg_reply = '\n \n' + self._emoji_music + ' test by test'
+        msg_reply += '\n \n' + self._emoji_save + ' /song 1'
+        msg_reply += '\n \nhttp://www.indieshuffle.com/'
+        self.assertReplied(self.bot, msg_reply)
 
     def test_latest(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/latest',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-        self.assertReplied(self.bot, 'Please select the genre: ')
         with HTTMock(_request_mock):
             self.bot.process_update(
                 Update.from_dict({
                     'update_id': 1,
                     'message': {
                         'message_id': 1,
-                        'text': 'all',
+                        'text': '/latest 1',
                         'chat': {
                             'id': 1,
                         },
                     }
                 })
             )
-        self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\nhttp://www.indieshuffle.com/\n'))
+        msg_reply = '\n \n' + self._emoji_music + ' test by test'
+        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
+        msg_reply += '\n \nhttp://www.indieshuffle.com/'
+        self.assertReplied(self.bot, msg_reply)
 
     def test_popular(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/popular',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-        self.assertReplied(self.bot, 'Please select the genre: ')
         with HTTMock(_request_mock):
             self.bot.process_update(
                 Update.from_dict({
                     'update_id': 1,
                     'message': {
                         'message_id': 1,
-                        'text': 'all',
+                        'text': '/popular 1',
                         'chat': {
                             'id': 1,
                         },
                     }
                 })
             )
-            self.assertReplied(self.bot, ('\n ' + self._emoji_music + ' test by test\nhttp://www.indieshuffle.com/\n'))
+        msg_reply = '\n \n' + self._emoji_music + ' test by test'
+        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
+        msg_reply += '\n \nhttp://www.indieshuffle.com/'
+        self.assertReplied(self.bot, msg_reply)
