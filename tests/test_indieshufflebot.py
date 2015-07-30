@@ -16,6 +16,47 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
         self._emoji_save = u'\U0001F3B4'
         self.bot = self.fake_bot('', plugins=[IndieShuPlugin()])
 
+    def test_song(self):
+        self.bot.process_update(
+            Update.from_dict({
+                'update_id': 1,
+                'message': {
+                    'message_id': 1,
+                    'text': '/song 1',
+                    'chat': {
+                        'id': 1,
+                    },
+                }
+            })
+        )
+        self.assertReplied(self.bot, 'Please provide the music id correct')
+        with HTTMock(_request_mock):
+            self.bot.process_update(
+                Update.from_dict({
+                    'update_id': 2,
+                    'message': {
+                        'message_id': 2,
+                        'text': '/tsong',
+                        'chat': {
+                            'id': 1,
+                        },
+                    }
+                })
+            )
+            self.bot.process_update(
+                Update.from_dict({
+                    'update_id': 3,
+                    'message': {
+                        'message_id': 3,
+                        'text': '/song 1',
+                        'chat': {
+                            'id': 1,
+                        },
+                    }
+                })
+            )
+        # self.assertReplied(self.bot, 'Downloading test...')
+
     def test_tsong(self):
         with HTTMock(_request_mock):
             self.bot.process_update(
@@ -31,7 +72,7 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
                 })
             )
         msg_reply = '\n \n' + self._emoji_music + ' test by test'
-        msg_reply += '\n \n' + self._emoji_save + ' /song 1'
+        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
         msg_reply += '\n \nhttp://www.indieshuffle.com/'
         self.assertReplied(self.bot, msg_reply)
 
