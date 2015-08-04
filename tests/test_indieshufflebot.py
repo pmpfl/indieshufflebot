@@ -14,102 +14,63 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
     def setUp(self):
         self._emoji_music = u'\U0001F3B5'
         self._emoji_save = u'\U0001F3B4'
-        self.bot = self.fake_bot('', plugins=[IndieShuPlugin()])
+        self.plugin = IndieShuPlugin()
+        self.bot = self.fake_bot('', plugins=[self.plugin])
+        self.received_id = 1
 
-    def test_song(self):
+    def receive_message(self, text, sender=None, chat=None):
+        if sender is None:
+            sender = {
+                'id': 1,
+                'first_name': 'John',
+                'last_name': 'Doe',
+            }
+
+        if chat is None:
+            chat = sender
+
         self.bot.process_update(
             Update.from_dict({
-                'update_id': 1,
+                'update_id': self.received_id,
                 'message': {
-                    'message_id': 1,
-                    'text': '/song 1',
-                    'chat': {
-                        'id': 1,
-                    },
+                    'message_id': self.received_id,
+                    'text': text,
+                    'chat': chat,
+                    'from': sender,
                 }
             })
         )
-        self.assertReplied(self.bot, 'Please provide the music id correct')
+
+        self.received_id += 1
+
+    def test_song(self):
+        self.receive_message('/song  1')
+        self.assertReplied(self.bot, 'I couldn\'t find your music')
         with HTTMock(_request_mock):
-            self.bot.process_update(
-                Update.from_dict({
-                    'update_id': 2,
-                    'message': {
-                        'message_id': 2,
-                        'text': '/tsong',
-                        'chat': {
-                            'id': 1,
-                        },
-                    }
-                })
-            )
-            self.bot.process_update(
-                Update.from_dict({
-                    'update_id': 3,
-                    'message': {
-                        'message_id': 3,
-                        'text': '/song 1',
-                        'chat': {
-                            'id': 1,
-                        },
-                    }
-                })
-            )
-        # self.assertReplied(self.bot, 'Downloading test...')
+            self.test_tsong()
+            self.receive_message('/song  1')
+        #self.assertReplied(self.bot, 'Downloading test...')
 
     def test_tsong(self):
         with HTTMock(_request_mock):
-            self.bot.process_update(
-                Update.from_dict({
-                    'update_id': 1,
-                    'message': {
-                        'message_id': 1,
-                        'text': '/tsong',
-                        'chat': {
-                            'id': 1,
-                        },
-                    }
-                })
-            )
+            self.receive_message('/tsong')
         msg_reply = '\n \n' + self._emoji_music + ' test by test'
-        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
+        msg_reply += '\n \n' + self._emoji_save + ' /song1'
         msg_reply += '\n \nhttp://www.indieshuffle.com/'
         self.assertReplied(self.bot, msg_reply)
 
     def test_latest(self):
         with HTTMock(_request_mock):
-            self.bot.process_update(
-                Update.from_dict({
-                    'update_id': 1,
-                    'message': {
-                        'message_id': 1,
-                        'text': '/latest 1',
-                        'chat': {
-                            'id': 1,
-                        },
-                    }
-                })
-            )
+            self.receive_message('/latest 1')
         msg_reply = '\n \n' + self._emoji_music + ' test by test'
-        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
+        msg_reply += '\n \n' + self._emoji_save + ' /song1'
         msg_reply += '\n \nhttp://www.indieshuffle.com/'
         self.assertReplied(self.bot, msg_reply)
 
     def test_popular(self):
         with HTTMock(_request_mock):
-            self.bot.process_update(
-                Update.from_dict({
-                    'update_id': 1,
-                    'message': {
-                        'message_id': 1,
-                        'text': '/popular 1',
-                        'chat': {
-                            'id': 1,
-                        },
-                    }
-                })
-            )
+            self.receive_message('/popular 1')
         msg_reply = '\n \n' + self._emoji_music + ' test by test'
-        msg_reply += '\n \n' + self._emoji_save + ' /song 1\n \n Tags: covers'
+        msg_reply += '\n \n' + self._emoji_save + ' /song1'
         msg_reply += '\n \nhttp://www.indieshuffle.com/'
         self.assertReplied(self.bot, msg_reply)

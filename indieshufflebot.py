@@ -14,7 +14,7 @@ def main():
         os.environ['TELEGRAM_KEY'],
         plugins=[
             IndieShuPlugin(),
-        ]
+        ],
     )
     tg.print_commands()
     tg.run()
