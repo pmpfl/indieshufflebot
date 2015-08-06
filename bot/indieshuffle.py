@@ -45,7 +45,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         song = json.loads(self.read_data(text)) if self.read_data(text) else None
         if song is not None:
             path = os.environ['OPENSHIFT_TMP_DIR'] if os.environ['OPENSHIFT_TMP_DIR'] else '/tmp/'
-            filename = '%s%s.mp3' % path, song['name']
+            filename = '%s%s.mp3' % (path, song['name'])
             urllib.urlretrieve(song['url'], filename)
             fp = open(filename, 'rb')
             file_info = InputFileInfo(filename, fp, 'audio/mp3')
