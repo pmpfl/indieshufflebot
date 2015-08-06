@@ -14,8 +14,7 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
     def setUp(self):
         self._emoji_music = u'\U0001F3B5'
         self._emoji_save = u'\U0001F3B4'
-        self.plugin = IndieShuPlugin()
-        self.bot = self.fake_bot('', plugins=[self.plugin])
+        self.bot = self.fake_bot('', plugins=[IndieShuPlugin()])
         self.received_id = 1
 
     def receive_message(self, text, sender=None, chat=None):
@@ -47,7 +46,7 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
         self.receive_message('/song  1')
         self.assertReplied(self.bot, 'I couldn\'t find your music')
         with HTTMock(_request_mock):
-            self.test_tsong()
+            #self.test_tsong()
             self.receive_message('/song  1')
         #self.assertReplied(self.bot, 'Downloading test...')
 
