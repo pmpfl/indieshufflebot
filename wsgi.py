@@ -12,6 +12,6 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 #
 
-from izclibot import openshift_app
+from indieshufflebot import openshift_app
 
 application = openshift_app()
