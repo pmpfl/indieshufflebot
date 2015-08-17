@@ -107,6 +107,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_keys():
+                print chat
                 if self.read_data(chat):
                     print "Sending latestsong to %s" % chat
                     bot.send_message(chat, msg).wait()
