@@ -1,2 +1,2 @@
 #!/bin/bash
-python ${OPENSHIFT_REPO_DIR}indieshufflebot.py --cron indie.newsong ''
+python ${OPENSHIFT_REPO_DIR}indieshufflebot.py -t ${TELEGRAM_KEY} -d 'postgresql://127.6.126.2:5432/indieshuffle' --cron indie.latestsong ''

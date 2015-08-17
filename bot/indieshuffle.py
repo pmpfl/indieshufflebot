@@ -40,7 +40,11 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         data['name'] = song['songs'][0]['title']
         self.save_data(str(song['id']), obj=json.dumps(data))
 
+    def save_user(self, user):
+        self.save_data('user', user, user)
+
     def song(self, bot, message, text):
+        self.save_user(message.chat.id)
         bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
         song = json.loads(self.read_data(text)) if self.read_data(text) else None
         if song is not None:
@@ -58,12 +62,14 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         os.remove(filename)
 
     def tsong(self, bot, message, text):
+        self.save_user(message.chat.id)
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
         self.save_song(song)
         msg = _prepare_reply(song)
         bot.send_message(message.chat.id, msg).wait()
 
     def latest(self, bot, message, text):
+        self.save_user(message.chat.id)
         msg = ''
         num = text if text else '5'
         songs = json.loads(_get_songs('', count=num))['posts']
@@ -74,6 +80,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         bot.send_message(message.chat.id, ret, disable_web_page_preview=True).wait()
 
     def popular(self, bot, message, text):
+        self.save_user(message.chat.id)
         msg = ''
         num = text if text else '5'
         songs = json.loads(_get_songs('track/popular/', count=num))['posts']
@@ -106,8 +113,8 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_data("latestsong", song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
-            for chat in self.iter_data_keys():
+            for chat in self.iter_data_key_keys('user'):
                 print chat
                 if self.read_data(chat):
                     print "Sending latestsong to %s" % chat
-                    bot.send_message(chat, msg).wait()
+                    bot.send_message(chat, msg)
