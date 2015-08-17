@@ -44,6 +44,11 @@ def main():
     if args.create_db:
         tg.setup_db()
 
+    if args.cron is not None:
+        for p in tg._plugins:
+            if hasattr(p, 'cron_go'):
+                p.cron_go(tg, *args.cron)
+
     if args.webhook is None:
         tg.run(polling_time=args.polling)
     else:
@@ -67,7 +72,8 @@ def build_parser():
                         help='setup database')
     parser.add_argument('--token', '-t', dest='token',
                         help='use webhooks (instead of polling) - requires bottle')
-
+    parser.add_argument('--cron', dest='cron', nargs=2, metavar=('action', 'param'),
+                        help='trigger cron ACTION with PARAM parameter and quit')
     return parser
 
 
