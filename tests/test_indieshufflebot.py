@@ -42,14 +42,6 @@ class IndieShuffle_Test(plugintest.PluginTestCase):
 
         self.received_id += 1
 
-    def test_song(self):
-        self.receive_message('/song  1')
-        self.assertReplied(self.bot, 'I couldn\'t find your music')
-        with HTTMock(_request_mock):
-            #self.test_tsong()
-            self.receive_message('/song  1')
-        #self.assertReplied(self.bot, 'Downloading test...')
-
     def test_tsong(self):
         with HTTMock(_request_mock):
             self.receive_message('/tsong')
