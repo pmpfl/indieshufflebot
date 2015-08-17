@@ -41,7 +41,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         self.save_data(str(song['id']), obj=json.dumps(data))
 
     def save_user(self, user):
-        self.save_data('user', user, user)
+        self.save_data('user', obj=user)
 
     def song(self, bot, message, text):
         self.save_user(message.chat.id)
@@ -99,8 +99,8 @@ class IndieShuPlugin(tgbot.TGPluginBase):
     def _cron_new_song(self, bot):
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
         print self.read_data("songofday")
-        if self.read_data("songofday") != song['id']:
-            self.save_data("songofday", obj=song['id'])
+        if self.read_data("tsong") != song['id']:
+            self.save_data("tsong", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_key_keys('user'):
@@ -109,9 +109,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_latest_song(self, bot):
         song = json.loads(_get_songs('', count=1))['posts'][0]
-        print self.read_data("latestsong")
-        if self.read_data("latestsong") != song['id']:
-            self.save_data("latestsong", obj=song['id'])
+        print self.read_data("lsong")
+        if self.read_data("lsong") != song['id']:
+            self.save_data("lsong", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_key_keys('user'):
