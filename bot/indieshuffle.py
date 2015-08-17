@@ -103,9 +103,8 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_keys():
-                if self.read_data(chat):
-                    print "Sending songofday to %s" % chat
-                    bot.send_message(chat, msg).wait()
+                print "Sending songofday to %s" % chat
+                bot.send_message(chat, msg).wait()
 
     def _cron_latest_song(self, bot):
         song = json.loads(_get_songs('', count=1))['posts'][0]
@@ -114,7 +113,5 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_key_keys('user'):
-                print chat
-                if self.read_data(chat):
-                    print "Sending latestsong to %s" % chat
-                    bot.send_message(chat, msg)
+                print "Sending latestsong to %s" % chat
+                bot.send_message(chat, msg)
