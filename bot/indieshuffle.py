@@ -98,8 +98,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_new_song(self, bot):
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
+        print self.read_data("songofday")
         if self.read_data("songofday") != song['id']:
-            self.save_data("songofday", song['id'])
+            self.save_data("songofday", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_keys():
@@ -108,8 +109,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_latest_song(self, bot):
         song = json.loads(_get_songs('', count=1))['posts'][0]
+        print self.read_data("latestsong")
         if self.read_data("latestsong") != song['id']:
-            self.save_data("latestsong", song['id'])
+            self.save_data("latestsong", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
             for chat in self.iter_data_key_keys('user'):
