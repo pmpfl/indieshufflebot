@@ -13,10 +13,11 @@ def _get_songs(service, count=1, page=1):
     return r.text
 
 
-def _prepare_reply(song):
+def _prepare_reply(song, title=''):
     emoji_music = u'\U0001F3B5'
     emoji_save = u'\U0001F3B4'
-    msg = '\n \n' + emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist']
+    msg = title
+    msg += '\n \n' + emoji_music + ' ' + song['sub_title'] + ' by ' + song['artist']
     msg += '\n \n' + emoji_save + ' /song' + str(song['id'])
     msg += '\n \n' + song['url']
     return msg
@@ -98,22 +99,24 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_new_song(self, bot):
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
-        print self.read_data("songofday")
-        if self.read_data("tsong") != song['id']:
-            self.save_data("tsong", obj=song['id'])
+        tsong = self.read_data("tosong")
+        print tsong
+        if tsong and tsong != song['id']:
+            self.save_data("tosong", obj=song['id'])
             self.save_song(song)
-            msg = _prepare_reply(song)
+            msg = _prepare_reply(song, "SONG OF THE DAY!")
             for chat in self.iter_data_key_keys('user'):
                 print "Sending songofday to %s" % chat
                 bot.send_message(chat, msg).wait()
 
     def _cron_latest_song(self, bot):
         song = json.loads(_get_songs('', count=1))['posts'][0]
-        print self.read_data("lsong")
-        if self.read_data("lsong") != song['id']:
-            self.save_data("lsong", obj=song['id'])
+        lasong = self.read_data("lasong")
+        print lasong
+        if lasong and lasong != song['id']:
+            self.save_data("lasong", obj=song['id'])
             self.save_song(song)
-            msg = _prepare_reply(song)
+            msg = _prepare_reply(song, "NEW SONG ADDED")
             for chat in self.iter_data_key_keys('user'):
                 print "Sending latestsong to %s" % chat
                 bot.send_message(chat, msg)
