@@ -101,7 +101,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
         tsong = self.read_data("tosong")
         print tsong
-        if tsong and tsong != song['id']:
+        if tsong is None or tsong != song['id']:
             self.save_data("tosong", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song, "SONG OF THE DAY!")
@@ -113,7 +113,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         song = json.loads(_get_songs('', count=1))['posts'][0]
         lasong = self.read_data("lasong")
         print lasong
-        if lasong and lasong != song['id']:
+        if lasong is None or lasong != song['id']:
             self.save_data("lasong", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song, "NEW SONG ADDED")
