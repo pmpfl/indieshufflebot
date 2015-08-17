@@ -102,6 +102,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_latest_song(self, bot):
         song = json.loads(_get_songs('', count=1))['posts'][0]
+        print song
         if self.read_data("latestsong") != song['id']:
             self.save_data("latestsong", song['id'])
             self.save_song(song)
