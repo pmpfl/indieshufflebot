@@ -1,0 +1,2 @@
+#!/bin/bash
+python ${OPENSHIFT_HOMEDIR}/indieshuffle.py --cron indie.newsong
