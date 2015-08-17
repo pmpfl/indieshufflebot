@@ -103,7 +103,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_data("songofday", obj=song['id'])
             self.save_song(song)
             msg = _prepare_reply(song)
-            for chat in self.iter_data_keys():
+            for chat in self.iter_data_key_keys('user'):
                 print "Sending songofday to %s" % chat
                 bot.send_message(chat, msg).wait()
 
