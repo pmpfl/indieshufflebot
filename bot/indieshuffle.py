@@ -46,7 +46,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def song(self, bot, message, text):
         self.save_user(message.chat.id)
-        bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
+        bot.send_chat_action(message.chat.id, ChatAction.TEXT)
         song = json.loads(self.read_data(text)) if self.read_data(text) else None
         if song is not None:
             path = os.environ['OPENSHIFT_TMP_DIR'] if os.environ['OPENSHIFT_TMP_DIR'] else '/tmp/'
