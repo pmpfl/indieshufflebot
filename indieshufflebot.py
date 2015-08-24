@@ -48,6 +48,7 @@ def main():
         for p in tg._plugins:
             if hasattr(p, 'cron_go'):
                 p.cron_go(tg, *args.cron)
+        return
 
     if args.webhook is None:
         tg.run(polling_time=args.polling)
