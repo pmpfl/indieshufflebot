@@ -26,7 +26,7 @@ def openshift_app():
         db_url='postgresql://%s:%s/indieshuffle' % (os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'], os.environ['OPENSHIFT_POSTGRESQL_DB_PORT']),
         token=os.environ['TELEGRAM_KEY']
     )
-    bot.tg.set_webhook('https://%s/update/%s' % (os.environ['OPENSHIFT_APP_DNS'], bot._token))
+    bot.set_webhook('https://%s/update/%s' % (os.environ['OPENSHIFT_APP_DNS'], bot._token))
 
     from tgbot.webserver import wsgi_app
     return wsgi_app(bot)
