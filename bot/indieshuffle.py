@@ -72,7 +72,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def alertlateston(self, bot, message, text):
             self.save_data(message.chat.id, 'LASTESTALERT', obj=True)
-            bot.send_message(message.chat.id, '/alertlatestff to trun it off')
+            bot.send_message(message.chat.id, '/alertlatestoff to trun it off')
 
     def alertlatestoff(self, bot, message, text):
         self.save_data(message.chat.id, 'LASTESTALERT', obj=False)
