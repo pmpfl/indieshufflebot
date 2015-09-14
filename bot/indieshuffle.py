@@ -31,10 +31,10 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         return [
             TGCommandBase('tsong', self.tsong, 'Song of the day'),
             TGCommandBase('song', self.song, 'Download song', prefix=True),
-            TGCommandBase('alerttsongon', self.alerttsong, 'Turn on alert todays song alert'),
-            TGCommandBase('alerttsongoff', self.alerttsong, 'Turn off  alert todays song alert'),
-            TGCommandBase('alertlateston', self.alertlatest, 'Turn on latest song alert',),
-            TGCommandBase('alertlatestoff', self.alertlatest, 'Turn off latest song alert',),
+            TGCommandBase('alerttsongon', self.alerttsongon, 'Turn on alert todays song alert'),
+            TGCommandBase('alerttsongoff', self.alerttsongoff, 'Turn off  alert todays song alert'),
+            TGCommandBase('alertlateston', self.alertlateston, 'Turn on latest song alert',),
+            TGCommandBase('alertlatestoff', self.alertlatestoff, 'Turn off latest song alert',),
             TGCommandBase('latest', self.latest, 'Latests songs!'),
             TGCommandBase('popular', self.latest, 'Latests songs!')
         ]
