@@ -112,7 +112,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if action == 'indie.alertsong':
             self._cron_alertsong(bot)
 
-    def cron__cron_alertsong(self, bot):
+    def _cron_alertsong(self, bot):
         tsong = json.loads(_get_songs('songsoftheday'))['posts'][0]
         lsongs = json.loads(_get_songs('', count=1))['posts']
         lsong = lsongs[0]
