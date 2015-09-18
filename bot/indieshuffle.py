@@ -118,10 +118,12 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         tsong = json.loads(_get_songs('songsoftheday'))['posts'][0]
         lsongs = json.loads(_get_songs('', count=1))['posts']
         lsong = lsongs[0]
-        if tsong['id'] == lsongs[0]['id']:
+        if tsong['id'] == lsong['id']:
             lsong = lsongs[1]
         tsongdb = self.read_data("tosong")
-        if tsongdb is None or tsongdb != tsong['id']:
+        print tsongdb
+        print tsong['id']
+        if tsongdb != tsong['id']:
             self.save_data("tosong", obj=tsong['id'])
             self.save_song(tsong)
             msg = _prepare_reply(tsong, "SONG OF THE DAY!")
@@ -129,7 +131,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
                 if self.read_data(chat, 'TSONGALERT'):
                     bot.send_message(chat, msg).wait()
         lsongdb = self.read_data("lasong")
-        if lsongdb is None or lsongdb != lsong['id']:
+        print lsongdb
+        print lsong['id']
+        if lsongdb != lsong['id']:
             self.save_data("lasong", obj=lsong['id'])
             self.save_song(lsong)
             msg = _prepare_reply(lsong, "NEW SONG ADDED")
