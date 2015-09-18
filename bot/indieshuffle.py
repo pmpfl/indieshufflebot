@@ -123,13 +123,14 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         tsongdb = self.read_data("tosong")
         print tsongdb
         print tsong['id']
-        if tsongdb != tsong['id']:
-            self.save_data("tosong", obj=tsong['id'])
-            self.save_song(tsong)
-            msg = _prepare_reply(tsong, "SONG OF THE DAY!")
-            for chat in self.iter_data_key_keys():
-                if self.read_data(chat, 'TSONGALERT'):
-                    bot.send_message(chat, msg).wait()
+        self.save_data("tosong", obj=tsong['id'])
+        self.save_song(tsong)
+        msg = _prepare_reply(tsong, "SONG OF THE DAY!")
+        for chat in self.iter_data_key_keys():
+            print chat
+            print self.read_data(chat, 'TSONGALERT')
+            if self.read_data(chat, 'TSONGALERT'):
+                bot.send_message(chat, msg).wait()
         lsongdb = self.read_data("lasong")
         print lsongdb
         print lsong['id']
