@@ -130,8 +130,11 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def _cron_alertsong(self, bot):
         tsong = json.loads(_get_songs('songsoftheday'))['posts'][0]
-        lsongs = json.loads(_get_songs('', count=1))['posts']
+        lsongs = json.loads(_get_songs('', count=2))['posts']
         lsong = lsongs[0]
+        print tsong['id']
+        print lsong['id']
+        print lsongs[1]['id']
         if tsong['id'] == lsong['id']:
             lsong = lsongs[1]
         tsongdb = self.read_data("tosong")
