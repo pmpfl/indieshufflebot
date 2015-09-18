@@ -127,19 +127,14 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if tsong['id'] == lsong['id']:
             lsong = lsongs[1]
         tsongdb = self.read_data("tosong")
-        print tsongdb
-        print tsong['id']
-        self.save_data("tosong", obj=tsong['id'])
-        self.save_song(tsong)
-        msg = _prepare_reply(tsong, "SONG OF THE DAY!")
-        for chat in self.iter_data_key_keys(key1="user"):
-            print chat
-            print self.read_data(chat, 'TSONGALERT')
-            if self.read_data(chat, 'TSONGALERT'):
-                bot.send_message(chat, msg).wait()
+        if tsongdb != tsong['id']:
+            self.save_data("tosong", obj=tsong['id'])
+            self.save_song(tsong)
+            msg = _prepare_reply(tsong, "SONG OF THE DAY!")
+            for chat in self.iter_data_key_keys(key1="user"):
+                if self.read_data(chat, 'TSONGALERT'):
+                    bot.send_message(chat, msg).wait()
         lsongdb = self.read_data("lasong")
-        print lsongdb
-        print lsong['id']
         if lsongdb != lsong['id']:
             self.save_data("lasong", obj=lsong['id'])
             self.save_song(lsong)
