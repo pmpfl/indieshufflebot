@@ -122,10 +122,10 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if action == 'indie.alertsong':
             self._cron_alertsong(bot)
 
-    def _send_to_users(self, bot, name, song, type):
+    def _send_to_users(self, bot, name, song, typ):
         msg = _prepare_reply(song, name)
         for chat in self.iter_data_key_keys(key1="user"):
-            if self.read_data(chat, type):
+            if self.read_data(chat, typ):
                 bot.send_message(chat, msg).wait()
 
     def _cron_alertsong(self, bot):
