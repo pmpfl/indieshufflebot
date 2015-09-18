@@ -26,6 +26,8 @@ def _prepare_reply(song, title=''):
 class IndieShuPlugin(tgbot.TGPluginBase):
     def __init__(self):
         super(IndieShuPlugin, self).__init__()
+        self.alert_tsong_key = 'TSONGALERT'
+        self.alert_latest_key = 'LASTESTALERT'
 
     def list_commands(self):
         return [
@@ -65,22 +67,22 @@ class IndieShuPlugin(tgbot.TGPluginBase):
 
     def alerttsongon(self, bot, message, text):
         self.save_data("user", key2=message.chat.id, obj=message.chat.id)
-        self.save_data(message.chat.id, 'TSONGALERT', obj=True)
+        self.save_data(message.chat.id, self.alert_tsong_key, obj=True)
         bot.send_message(message.chat.id, '/alerttsongoff to trun it off')
 
     def alerttsongoff(self, bot, message, text):
         self.save_data("user", key2=message.chat.id, obj=message.chat.id)
-        self.save_data(message.chat.id, 'TSONGALERT', obj=False)
+        self.save_data(message.chat.id, self.alert_tsong_key, obj=False)
         bot.send_message(message.chat.id, '/alerttsongon to trun it off')
 
     def alertlateston(self, bot, message, text):
         self.save_data("user", key2=message.chat.id, obj=message.chat.id)
-        self.save_data(message.chat.id, 'LASTESTALERT', obj=True)
+        self.save_data(message.chat.id, self.alert_latest_key, obj=True)
         bot.send_message(message.chat.id, '/alertlatestoff to trun it off')
 
     def alertlatestoff(self, bot, message, text):
         self.save_data("user", key2=message.chat.id, obj=message.chat.id)
-        self.save_data(message.chat.id, 'LASTESTALERT', obj=False)
+        self.save_data(message.chat.id, self.alert_latest_key, obj=False)
         bot.send_message(message.chat.id, '/alertlateston to trun it off')
 
     def success_song(self, filename):
@@ -120,6 +122,12 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if action == 'indie.alertsong':
             self._cron_alertsong(bot)
 
+    def _send_to_users(self, bot, name, song, type):
+        msg = _prepare_reply(song, name)
+        for chat in self.iter_data_key_keys(key1="user"):
+            if self.read_data(chat, type):
+                bot.send_message(chat, msg).wait()
+
     def _cron_alertsong(self, bot):
         tsong = json.loads(_get_songs('songsoftheday'))['posts'][0]
         lsongs = json.loads(_get_songs('', count=1))['posts']
@@ -130,17 +138,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         if tsongdb != tsong['id']:
             self.save_data("tosong", obj=tsong['id'])
             self.save_song(tsong)
-            msg = _prepare_reply(tsong, "SONG OF THE DAY!")
-            for chat in self.iter_data_key_keys(key1="user"):
-                if self.read_data(chat, 'TSONGALERT'):
-                    bot.send_message(chat, msg).wait()
+            self._send_to_users(bot, "SONG OF THE DAY!", tsong, self.alert_tsong_key)
         lsongdb = self.read_data("lasong")
         if lsongdb != lsong['id']:
             self.save_data("lasong", obj=lsong['id'])
             self.save_song(lsong)
-            msg = _prepare_reply(lsong, "NEW SONG ADDED")
-            for chat in self.iter_data_key_keys():
-                print chat
-                print self.read_data(chat, 'LASTESTALERT')
-                if self.read_data(chat, 'LASTESTALERT'):
-                    bot.send_message(chat, msg)
+            self._send_to_users(bot, "NEW SONG ADDED!", lsong, self.alert_latest_key)
