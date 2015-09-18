@@ -131,10 +131,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
     def _cron_alertsong(self, bot):
         tsong = json.loads(_get_songs('songsoftheday'))['posts'][0]
         lsongs = json.loads(_get_songs('', count=2))['posts']
-        lsong = lsongs[1]
-        print tsong['id']
-        print lsong['id']
-        print lsongs[1]['id']
+        lsong = lsongs[0]
         if tsong['id'] == lsong['id']:
             lsong = lsongs[1]
         tsongdb = self.read_data("tosong")
@@ -143,7 +140,6 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_song(tsong)
             self._send_to_users(bot, "SONG OF THE DAY!", tsong, self.alert_tsong_key)
         lsongdb = self.read_data("lasong")
-        print lsongdb
         if lsongdb != lsong['id']:
             self.save_data("lasong", obj=lsong['id'])
             self.save_song(lsong)
