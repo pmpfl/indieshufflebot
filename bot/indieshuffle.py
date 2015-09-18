@@ -49,6 +49,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             print "Error on save_song"
 
     def song(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         bot.send_chat_action(message.chat.id, ChatAction.TEXT)
         song = json.loads(self.read_data(text)) if self.read_data(text) else None
         if song is not None:
@@ -63,19 +64,22 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             bot.send_message(message.chat.id, 'I couldn\'t find your music').wait()
 
     def alerttsongon(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         self.save_data(message.chat.id, 'TSONGALERT', obj=True)
         bot.send_message(message.chat.id, '/alerttsongoff to trun it off')
 
     def alerttsongoff(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         self.save_data(message.chat.id, 'TSONGALERT', obj=False)
         bot.send_message(message.chat.id, '/alerttsongon to trun it off')
 
     def alertlateston(self, bot, message, text):
-        print message.chat.id
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         self.save_data(message.chat.id, 'LASTESTALERT', obj=True)
         bot.send_message(message.chat.id, '/alertlatestoff to trun it off')
 
     def alertlatestoff(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         self.save_data(message.chat.id, 'LASTESTALERT', obj=False)
         bot.send_message(message.chat.id, '/alertlateston to trun it off')
 
@@ -83,12 +87,14 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         os.remove(filename)
 
     def tsong(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         song = json.loads(_get_songs('songsoftheday'))['posts'][0]
         self.save_song(song)
         msg = _prepare_reply(song)
         bot.send_message(message.chat.id, msg).wait()
 
     def latest(self, bot, message, text):
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         msg = ''
         num = text if text else '5'
         songs = json.loads(_get_songs('', count=num))['posts']
@@ -99,7 +105,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         bot.send_message(message.chat.id, ret, disable_web_page_preview=True).wait()
 
     def popular(self, bot, message, text):
-        self.save_user(message.chat.id)
+        self.save_data("user", key2=message.chat.id, obj=message.chat.id)
         msg = ''
         num = text if text else '5'
         songs = json.loads(_get_songs('track/popular/', count=num))['posts']
@@ -126,7 +132,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         self.save_data("tosong", obj=tsong['id'])
         self.save_song(tsong)
         msg = _prepare_reply(tsong, "SONG OF THE DAY!")
-        for chat in self.iter_data_key_keys():
+        for chat in self.iter_data_key_keys(key1="user"):
             print chat
             print self.read_data(chat, 'TSONGALERT')
             if self.read_data(chat, 'TSONGALERT'):
