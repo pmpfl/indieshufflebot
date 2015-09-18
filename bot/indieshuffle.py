@@ -110,6 +110,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         bot.send_message(message.chat.id, ret, disable_web_page_preview=True).wait()
 
     def cron_go(self, bot, action, param):
+        print action
         if action == 'indie.alertsong':
             self._cron_alertsong(bot)
 
