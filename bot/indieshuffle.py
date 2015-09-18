@@ -71,8 +71,9 @@ class IndieShuPlugin(tgbot.TGPluginBase):
         bot.send_message(message.chat.id, '/alerttsongon to trun it off')
 
     def alertlateston(self, bot, message, text):
-            self.save_data(message.chat.id, 'LASTESTALERT', obj=True)
-            bot.send_message(message.chat.id, '/alertlatestoff to trun it off')
+        print message.chat.id
+        self.save_data(message.chat.id, 'LASTESTALERT', obj=True)
+        bot.send_message(message.chat.id, '/alertlatestoff to trun it off')
 
     def alertlatestoff(self, bot, message, text):
         self.save_data(message.chat.id, 'LASTESTALERT', obj=False)
@@ -132,5 +133,7 @@ class IndieShuPlugin(tgbot.TGPluginBase):
             self.save_song(lsong)
             msg = _prepare_reply(lsong, "NEW SONG ADDED")
             for chat in self.iter_data_key_keys():
+                print chat
+                print self.read_data(chat, 'LASTESTALERT')
                 if self.read_data(chat, 'LASTESTALERT'):
                     bot.send_message(chat, msg)

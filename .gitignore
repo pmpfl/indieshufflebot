@@ -3,4 +3,3 @@ local_settings.py
 *.pyc
 *.sqlite3
 src/
-.openshift
