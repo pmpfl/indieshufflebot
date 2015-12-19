@@ -6,6 +6,8 @@ A telegram bot based on [tgbotplug].
 
 Find it here : [indieshufflebot]
 
+Telegram Bot Store: [indieshufflebotstore] 
+
 ### Functionalities
 
 - Get latest songs from [indieshuffle].
@@ -28,3 +30,4 @@ MIT
 [tgbotplug]:https://github.com/fopina/tgbotplug
 [indieshuffle]:http://www.indieshuffle.com/
 [indieshufflebot]:https://telegram.me/indieshufflebot
+[indieshufflebotstore]:https://storebot.me/bot/indieshufflebot
